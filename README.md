@@ -7,7 +7,7 @@ B.Sc. graduation dissertation (graded **A+**, British University in Egypt, 2026)
 
 ## Models
 
-Five U-Net-family segmenters designed and trained from scratch in PyTorch under one controlled protocol (100 epochs each), plus a pretrained baseline:
+Five U-Net-family segmenters designed and trained from scratch in PyTorch under one controlled protocol (100 epochs each):
 
 | # | Architecture |
 |---|---|
@@ -16,7 +16,6 @@ Five U-Net-family segmenters designed and trained from scratch in PyTorch under 
 | 3 | Shape-Transformer U-Net |
 | 4 | ASPP + CBAM U-Net (polarimetric) |
 | 5 | **DMoE — dual-attention Mixture-of-Experts U-Net (selected)** |
-| — | Pretrained ResNet50-U-Net (reference) |
 
 ## Results (held-out test set — dataset Part III, 450 tiles)
 
