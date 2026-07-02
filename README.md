@@ -32,7 +32,7 @@ Qualitative test-set predictions (SAR input, ground truth, model prediction):
 
 ![Qualitative predictions](figures/qualitative_predictions.jpg)
 
-Training and validation history across models:
+Training and validation history of the selected dual-attention MoE model (loss, oil IoU, F1):
 
 ![Training history](figures/training_history.png)
 
