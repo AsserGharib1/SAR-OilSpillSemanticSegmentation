@@ -3,28 +3,32 @@
 [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/AsserGharib1/SAR-OilSpillSemanticSegmentation/blob/main/sar_oil_spill_segmentation.ipynb)
 [![View on nbviewer](https://img.shields.io/badge/view%20full%20notebook-nbviewer-F37626?logo=jupyter&logoColor=white)](https://nbviewer.org/github/AsserGharib1/SAR-OilSpillSemanticSegmentation/blob/main/sar_oil_spill_segmentation.ipynb)
 
-> **Viewing tip:** GitHub truncates the inline preview of large notebooks (this one preserves all training outputs). Use the **nbviewer** badge above to read it fully rendered in the browser, or **Colab** to open it interactively.
+B.Sc. graduation dissertation (graded **A+**, British University in Egypt, 2026): *"A Hybrid Artificial Intelligence Pipeline for the Classification and Segmentation of Marine Oil Spills"*. The task: delineate oil slicks that occupy ~1% of each Sentinel-1 SAR scene and are easily confused with look-alike phenomena.
 
+## Models
 
-Deep-learning pipeline that detects and segments marine oil spills in Sentinel-1 SAR satellite imagery — B.Sc. graduation project (graded **A+**) at the British University in Egypt.
+Five U-Net-family segmenters designed and trained from scratch in PyTorch under one controlled protocol (100 epochs each), plus a pretrained baseline:
 
-## Highlights
+| # | Architecture |
+|---|---|
+| 1 | Plain U-Net (baseline) |
+| 2 | Residual-Attention U-Net |
+| 3 | Shape-Transformer U-Net |
+| 4 | ASPP + CBAM U-Net (polarimetric) |
+| 5 | **DMoE — dual-attention Mixture-of-Experts U-Net (selected)** |
+| — | Pretrained ResNet50-U-Net (reference) |
 
-- **Five custom U-Net variants** designed and trained in PyTorch: residual attention, shape-transformer, ASPP + CBAM, and a dual-attention **Mixture-of-Experts (MoE)** decoder.
-- **0.70 oil-class IoU / 0.78 F1** on a 450-tile held-out test set with a **5.2M-parameter** MoE model — outperforming a baseline **2.2× larger**.
-- **Extreme class imbalance (~1% oil pixels)** handled with a weighted tile sampler, validation-tuned decision thresholds, and 95% bootstrap confidence intervals.
-- **Fault-tolerant training at scale**: 127 GB dataset trained on Google Colab with per-epoch checkpointing + automatic resume, gradient checkpointing, mixed precision, and half-precision tile caching.
-- **Controlled ablations**: classifier gating and a two-model ensemble with test-time augmentation (0.72 IoU) — the simpler single model was selected for delivery after a cost/benefit analysis.
+## Results (held-out test set — dataset Part III, 450 tiles)
 
-## Results (held-out test set, 450 tiles)
+| Configuration | Oil IoU | Oil F1 |
+|---|---|---|
+| **DMoE, 5.2M params (selected)** | **0.7021** | **0.7766** |
+| Shape-Transformer + DMoE ensemble, 4-way TTA | 0.7175 | — |
 
-| Model | Params | Oil IoU | Oil F1 |
-|---|---|---|---|
-| Dual-attention MoE U-Net (selected) | 5.2M | **0.70** | **0.78** |
-| Two-model ensemble + TTA (ablation) | — | 0.72 | — |
-| Larger single baseline | 11.6M | lower | — |
-
-Full methodology, architecture diagrams, and evaluation are in [`docs/thesis.pdf`](docs/thesis.pdf); a condensed overview is in [`docs/presentation.pdf`](docs/presentation.pdf).
+- The 5.2M-parameter DMoE outperformed the pretrained ResNet50-U-Net more than twice its size — architectural capability, not raw scale, drove accuracy.
+- A standalone scene classifier reached 0.9289 accuracy / 0.8926 F1; hard gating reduced segmentation recall, so it was kept only as an optional fallback (documented ablation).
+- Extreme ~1% class imbalance handled with a class-balanced weighted tile sampler, validation-tuned thresholds, and 95% bootstrap confidence intervals.
+- Fault-tolerant Colab training on the 127 GB dataset: per-epoch checkpointing with auto-resume, gradient checkpointing, mixed precision, half-precision tile caching.
 
 ## Sample results
 
@@ -32,21 +36,28 @@ Qualitative test-set predictions (SAR input, ground truth, model prediction):
 
 ![Qualitative predictions](figures/qualitative_predictions.jpg)
 
-Training and validation history of the selected dual-attention MoE model (loss, oil IoU, F1):
+Training and validation history of the selected DMoE model (loss, oil IoU, F1):
 
 ![Training history](figures/training_history.png)
 
+## Dataset
+
+Public **Sentinel-1 SAR Oil Spill dataset** (Trujillo-Acatitla, Tuxpan-Vargas, Ovando-Vázquez & Monterrubio-Martínez; CC-BY 4.0). Parts I–II were used for training/validation and Part III as the held-out test set:
+
+- Part I — DOI: [10.5281/zenodo.8346860](https://zenodo.org/records/8346860)
+- Part II — DOI: [10.5281/zenodo.8253899](https://zenodo.org/records/8253899)
+- Part III — DOI: [10.5281/zenodo.13761290](https://zenodo.org/records/13761290)
+
+2048×2048 dual-polarization (VV, VH) Sigma0 tiles in dB with pixel-level ground-truth masks.
+
 ## Repository contents
 
-- `sar_oil_spill_segmentation.ipynb` — full pipeline: preprocessing, augmentation, caching, five architectures, training loops, evaluation, and ablations (all outputs preserved).
-- `docs/` — thesis and defense presentation.
+- `sar_oil_spill_segmentation.ipynb` — full pipeline: preprocessing, augmentation, caching, five architectures, training, evaluation, ablations (outputs preserved; large images recompressed for browser rendering).
+- `docs/thesis.pdf` — full dissertation. `docs/presentation.pdf` — defense slides.
 
 ## Running
-
-The notebook targets Google Colab (Drive-mounted dataset). To reproduce: place the SAR tile dataset in your Drive, adjust the config cell paths, and run top-to-bottom. Checkpointing resumes automatically after Colab disconnects.
 
 ```bash
 pip install -r requirements.txt
 ```
-
-*The 127 GB Sentinel-1 dataset is not redistributed here.*
+Download the three dataset parts to Drive, point the config cell at them, run top-to-bottom on Colab (checkpointing resumes automatically).
