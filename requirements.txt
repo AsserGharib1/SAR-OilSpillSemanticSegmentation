@@ -1,0 +1,11 @@
+torch>=2.0
+torchvision
+segmentation-models-pytorch
+numpy
+pandas
+opencv-python
+tifffile
+matplotlib
+scikit-learn
+tqdm
+psutil
