@@ -20,13 +20,13 @@ Five U-Net-family segmenters designed and trained from scratch in PyTorch under 
 
 ## Results (held-out test set — dataset Part III, 450 tiles)
 
-| Configuration | Oil IoU | Oil F1 |
-|---|---|---|
-| **DMoE, 5.2M params (selected)** | **0.7021** | **0.7766** |
-| Shape-Transformer + DMoE ensemble, 4-way TTA | 0.7175 | — |
+| Configuration | Oil IoU |
+|---|---|
+| **DMoE, 5.2M params (selected)** | **0.7021** |
+| Shape-Transformer + DMoE ensemble, 4-way TTA | 0.7175 |
 
 - The 5.2M-parameter DMoE outperformed the pretrained ResNet50-U-Net more than twice its size — architectural capability, not raw scale, drove accuracy.
-- A standalone scene classifier reached 0.9289 accuracy / 0.8926 F1; hard gating reduced segmentation recall, so it was kept only as an optional fallback (documented ablation).
+- A standalone scene classifier reached 0.9289 accuracy; hard gating reduced segmentation recall, so it was kept only as an optional fallback (documented ablation).
 - Extreme ~1% class imbalance handled with a class-balanced weighted tile sampler, validation-tuned thresholds, and 95% bootstrap confidence intervals.
 - Fault-tolerant Colab training on the 127 GB dataset: per-epoch checkpointing with auto-resume, gradient checkpointing, mixed precision, half-precision tile caching.
 
@@ -36,7 +36,7 @@ Qualitative test-set predictions (SAR input, ground truth, model prediction):
 
 ![Qualitative predictions](figures/qualitative_predictions.jpg)
 
-Training and validation history of the selected DMoE model (loss, oil IoU, F1):
+Training and validation history of the selected DMoE model (loss and oil IoU):
 
 ![Training history](figures/training_history.png)
 
