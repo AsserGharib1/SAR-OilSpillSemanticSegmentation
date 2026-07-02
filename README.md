@@ -1,5 +1,11 @@
 # Marine Oil-Spill Segmentation in Sentinel-1 SAR Imagery
 
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/AsserGharib1/SAR-OilSpillSemanticSegmentation/blob/main/sar_oil_spill_segmentation.ipynb)
+[![View on nbviewer](https://img.shields.io/badge/view%20full%20notebook-nbviewer-F37626?logo=jupyter&logoColor=white)](https://nbviewer.org/github/AsserGharib1/SAR-OilSpillSemanticSegmentation/blob/main/sar_oil_spill_segmentation.ipynb)
+
+> **Viewing tip:** GitHub truncates the inline preview of large notebooks (this one preserves all training outputs). Use the **nbviewer** badge above to read it fully rendered in the browser, or **Colab** to open it interactively.
+
+
 Deep-learning pipeline that detects and segments marine oil spills in Sentinel-1 SAR satellite imagery — B.Sc. graduation project (graded **A+**) at the British University in Egypt.
 
 ## Highlights
@@ -19,6 +25,16 @@ Deep-learning pipeline that detects and segments marine oil spills in Sentinel-1
 | Larger single baseline | 11.6M | lower | — |
 
 Full methodology, architecture diagrams, and evaluation are in [`docs/thesis.pdf`](docs/thesis.pdf); a condensed overview is in [`docs/presentation.pdf`](docs/presentation.pdf).
+
+## Sample results
+
+Qualitative test-set predictions (SAR input, ground truth, model prediction):
+
+![Qualitative predictions](figures/qualitative_predictions.jpg)
+
+Training and validation history across models:
+
+![Training history](figures/training_history.png)
 
 ## Repository contents
 
